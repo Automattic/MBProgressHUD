@@ -62,7 +62,7 @@ XCTAssertNil(hud.superview, @"The HUD should not have a superview."); \
         dummyUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:[NSData data] error:nil];
 #if !TARGET_OS_MACCATALYST
     } else {
-        dummyUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:[NSData data]];
+        dummyUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:[NSData data] error:nil];
     }
 #endif
     XCTAssertNotNil([[MBProgressHUD alloc] initWithCoder:dummyUnarchiver]);
@@ -116,9 +116,7 @@ XCTAssertNil(hud.superview, @"The HUD should not have a superview."); \
     XCTAssertEqual(hud.bezelView.alpha, 0.f, @"The HUD bezel should be animated out.");
     XCTAssertTrue([hud.bezelView.layer.animationKeys containsObject:@"opacity"], @"The opacity should be animated.");
 
-    weakify(self);
     self.hideChecks = ^{
-        strongify(self);
         MBTestHUDIsHidenAndRemoved(hud, rootView);
 
         XCTAssertFalse([MBProgressHUD hideHUDForView:rootView animated:YES], @"A subsequent HUD hide operation should fail.");
@@ -375,9 +373,7 @@ XCTAssertNil(hud.superview, @"The HUD should not have a superview."); \
         checkedAfterOneSecond = YES;
     });
 
-    weakify(self);
     self.hideChecks = ^{
-        strongify(self);
         XCTAssertTrue(checkedAfterOneSecond);
     };
 

@@ -770,39 +770,6 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     if (self.superview) {
         self.frame = self.superview.bounds;
     }
-
-    // Not needed on iOS 8+, compile out when the deployment target allows,
-    // to avoid sharedApplication problems on extension targets
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
-    // Only needed pre iOS 8 when added to a window
-    BOOL iOS8OrLater = kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0;
-    if (iOS8OrLater || ![self.superview isKindOfClass:[UIWindow class]]) return;
-
-    // Make extension friendly. Will not get called on extensions (iOS 8+) due to the above check.
-    // This just ensures we don't get a warning about extension-unsafe API.
-    Class UIApplicationClass = NSClassFromString(@"UIApplication");
-    if (!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) return;
-
-    UIApplication *application = [UIApplication performSelector:@selector(sharedApplication)];
-    UIInterfaceOrientation orientation = application.statusBarOrientation;
-    CGFloat radians = 0;
-
-    if (UIInterfaceOrientationIsLandscape(orientation)) {
-        radians = orientation == UIInterfaceOrientationLandscapeLeft ? -(CGFloat)M_PI_2 : (CGFloat)M_PI_2;
-        // Window coordinates differ!
-        self.bounds = CGRectMake(0, 0, self.bounds.size.height, self.bounds.size.width);
-    } else {
-        radians = orientation == UIInterfaceOrientationPortraitUpsideDown ? (CGFloat)M_PI : 0.f;
-    }
-
-    if (animated) {
-        [UIView animateWithDuration:0.3 animations:^{
-            self.transform = CGAffineTransformMakeRotation(radians);
-        }];
-    } else {
-        self.transform = CGAffineTransformMakeRotation(radians);
-    }
-#endif
 }
 
 @end
