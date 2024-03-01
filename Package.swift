@@ -1,4 +1,4 @@
-// swift-tools-version:4.2
+// swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
@@ -9,10 +9,10 @@ let package = Package(
     targets: [
         .target(
             name: "MBProgressHUD",
-            dependencies: [],
             path: ".",
             exclude: ["Demo"],
             sources: ["MBProgressHUD.h", "MBProgressHUD.m"],
+            resources: [.copy("PrivacyInfo.xcprivacy")],
             publicHeadersPath: "include"
         )
     ]
